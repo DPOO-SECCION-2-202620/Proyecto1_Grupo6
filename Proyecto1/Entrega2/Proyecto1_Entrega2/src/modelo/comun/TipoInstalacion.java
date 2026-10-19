@@ -1,5 +1,7 @@
 package modelo.comun;
 
 public enum TipoInstalacion {
+	
+	CANCHA_FUTBOL, CANCHA_BALONCESTO, CANCHA_VOLEIBOL, CANCHA_TENIS, CANCHA_PADEL, MESA_TENIS_MESA
 
 }
