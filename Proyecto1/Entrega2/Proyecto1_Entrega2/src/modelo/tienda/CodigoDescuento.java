@@ -28,7 +28,12 @@ public class CodigoDescuento {
 		return empleado;
 	}
 	
-	
+    public double calcularPorcentaje(Usuarios comprador) {
+        if (empleado.getLogin().equals(comprador.getLogin())) {
+            return PORCENTAJE_PROPIO;
+        }
+        return PORCENTAJE_OTROS;
+    }
 	
 	
 	

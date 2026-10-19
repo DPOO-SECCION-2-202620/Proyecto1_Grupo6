@@ -29,8 +29,42 @@ public class VentaTienda extends Venta{
 		// TODO Auto-generated method stub
 		return super.calcularTotalConDescuento() - descuentoAplicado;
 	}
+
+
+	public double getDescuentoAplicado() {
+		return descuentoAplicado;
+	}
+
+
+	public void setDescuentoAplicado(double descuentoAplicado) {
+		this.descuentoAplicado = descuentoAplicado;
+	}
+
+
+	public CodigoDescuento getCodigoDescuento() {
+		return codigoDescuento;
+	}
 	
 	
+	
+	 public void aplicarCodigoDescuento() {
+	        if (codigoDescuento == null) {
+	            descuentoAplicado = 0;
+	            return;
+	        }
+	        if (descuentoPorPuntos > 0) {
+	            throw new IllegalStateException("El código de descuento no es acumulable con puntos");
+	        }
+	        descuentoAplicado = calcularSubtotal() * codigoDescuento.calcularPorcentaje(comprador);
+	    }
+
+	    @Override
+	    public MovimientoPuntos redimirPuntos(int puntos) {
+	        if (descuentoAplicado > 0) {
+	            throw new IllegalStateException("No se pueden redimir puntos si ya se aplicó un código de descuento");
+	        }
+	        return super.redimirPuntos(puntos);
+	    }
 	
 	
 	

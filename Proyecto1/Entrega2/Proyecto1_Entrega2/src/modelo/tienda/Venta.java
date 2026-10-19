@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import modelo.comun.TipoMovimiento;
 import modelo.usuarios.Usuarios;
 
 public abstract class Venta {
@@ -80,4 +81,29 @@ public abstract class Venta {
 	
 	
 	
+	public MovimientoPuntos redimirPuntos(int puntos) {
+		if (puntos <= 0) {
+            throw new IllegalArgumentException("La cantidad de puntos debe ser positiva");
+        }
+        if (descuentoPorPuntos > 0) {
+            throw new IllegalStateException("Ya se redimieron puntos en esta venta");
+        }
+        if (puntos > comprador.getPuntos()) {
+            throw new IllegalStateException("El comprador no tiene suficientes puntos");
+        }
+        if (puntos > calcularSubtotal()) {
+            throw new IllegalArgumentException("No se pueden redimir más puntos que el subtotal");
+        }
+        descuentoPorPuntos = puntos;
+        comprador.restarPuntos(puntos);
+        return new MovimientoPuntos(fecha, puntos, TipoMovimiento.REDIMIDOS, comprador);
+	}
+	
+	
+	
+	public MovimientoPuntos registrarPuntosGanados() {
+        int puntos = calcularPuntosGanados();
+        comprador.sumarPuntos(puntos);
+        return new MovimientoPuntos(fecha, puntos, TipoMovimiento.GANADOS, comprador);
+    }
 }
