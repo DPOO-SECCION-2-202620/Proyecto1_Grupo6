@@ -45,7 +45,13 @@ public class Equipo {
  }
  public List<Jugador> getNominaJugadores() {
 	return nominaJugadores;
- }	
+ }
+
+	public Categoria getCategoria() {
+		return this.categoria;
+	}
+
+
  }
  
  
