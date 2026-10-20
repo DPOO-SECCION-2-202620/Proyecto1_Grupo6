@@ -3,11 +3,11 @@ package modelo.tienda;
 import java.time.LocalDate;
 import java.util.List;
 
-import modelo.usuarios.Usuarios;
+import modelo.usuarios.Usuario;
 
 public class VentaTienda extends Venta{
 
-	public VentaTienda(LocalDate fecha, Usuarios comprador, CodigoDescuento codigoDescuento) {
+	public VentaTienda(LocalDate fecha, Usuario comprador, CodigoDescuento codigoDescuento) {
 		super(fecha, comprador);
 		this.codigoDescuento = codigoDescuento; 
 		// TODO Auto-generated constructor stub

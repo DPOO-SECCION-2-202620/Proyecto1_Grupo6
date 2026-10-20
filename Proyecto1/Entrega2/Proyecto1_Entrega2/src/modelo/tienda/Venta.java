@@ -6,12 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import modelo.comun.TipoMovimiento;
-import modelo.usuarios.Usuarios;
+import modelo.usuarios.Usuario;
 
 public abstract class Venta {
 
 	
-	public Venta(LocalDate fecha,Usuarios comprador) {
+	public Venta(LocalDate fecha,Usuario comprador) {
 		super();
 		this.fecha = fecha;
 		this.impuesto = 0;
@@ -22,7 +22,7 @@ public abstract class Venta {
 	protected LocalDate fecha;
 	protected double impuesto;
 	protected double descuentoPorPuntos;
-	protected Usuarios comprador;
+	protected Usuario comprador;
 	protected List<DetalleVenta> detalles;
 	
 	
@@ -43,7 +43,7 @@ public abstract class Venta {
 	public LocalDate getFecha() {
 		return fecha;
 	}
-	public Usuarios getComprador() {
+	public Usuario getComprador() {
 		return comprador;
 	}
 	public List<DetalleVenta> getDetalles() {

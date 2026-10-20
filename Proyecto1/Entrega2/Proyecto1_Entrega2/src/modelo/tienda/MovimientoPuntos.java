@@ -3,17 +3,17 @@ package modelo.tienda;
 import java.time.LocalDate;
 
 import modelo.comun.TipoMovimiento;
-import modelo.usuarios.Usuarios;
+import modelo.usuarios.Usuario;
 
 public class MovimientoPuntos {
 
 	private LocalDate fecha;
 	private int cantidad;
 	private TipoMovimiento tipo;
-	private Usuarios usuario;
+	private Usuario usuario;
 	
 	
-	public MovimientoPuntos(LocalDate fecha, int cantidad, TipoMovimiento tipo, Usuarios usuario) {
+	public MovimientoPuntos(LocalDate fecha, int cantidad, TipoMovimiento tipo, Usuario usuario) {
 		if(cantidad < 0) {
 			throw new IllegalArgumentException("La cantidad de puntos no puede ser negativa");
 		}
@@ -39,7 +39,7 @@ public class MovimientoPuntos {
 	}
 
 
-	public Usuarios getUsuario() {
+	public Usuario getUsuario() {
 		return usuario;
 	}
 	

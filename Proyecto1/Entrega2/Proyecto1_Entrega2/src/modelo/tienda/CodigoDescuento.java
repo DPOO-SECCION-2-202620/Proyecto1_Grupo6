@@ -1,7 +1,7 @@
 package modelo.tienda;
 
 import modelo.usuarios.Empleado;
-import modelo.usuarios.Usuarios;
+import modelo.usuarios.Usuario;
 
 public class CodigoDescuento {
 
@@ -28,7 +28,7 @@ public class CodigoDescuento {
 		return empleado;
 	}
 	
-    public double calcularPorcentaje(Usuarios comprador) {
+    public double calcularPorcentaje(Usuario comprador) {
         if (empleado.getLogin().equals(comprador.getLogin())) {
             return PORCENTAJE_PROPIO;
         }

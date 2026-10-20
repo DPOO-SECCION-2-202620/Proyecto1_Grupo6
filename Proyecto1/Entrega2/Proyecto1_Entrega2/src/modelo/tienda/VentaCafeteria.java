@@ -2,7 +2,7 @@ package modelo.tienda;
 
 import java.time.LocalDate;
 
-import modelo.usuarios.Usuarios;
+import modelo.usuarios.Usuario;
 
 public class VentaCafeteria extends Venta{
 
@@ -11,7 +11,7 @@ public class VentaCafeteria extends Venta{
 	
 	private double propina;
 
-	public VentaCafeteria(LocalDate fecha, Usuarios comprador) {
+	public VentaCafeteria(LocalDate fecha, Usuario comprador) {
 		super(fecha, comprador);
 		this.propina = 0;
 		// TODO Auto-generated constructor stub
