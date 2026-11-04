@@ -3,6 +3,7 @@ package modelo;
 import java.util.ArrayList;
 import java.util.List;
 
+import modelo.comun.TipoDisciplina;
 import modelo.individual.DisciplinaIndividual;
 import modelo.tienda.ExistenciaArticulo;
 import modelo.tienda.Producto;
@@ -99,6 +100,54 @@ public class Club {
 		return new ArrayList<>(torneos);
 	}
 	
+	
+	public Usuario buscarUsuario(String login) {
+		for(Usuario u: usuarios){
+			if(u.getLogin().equals(login)) {
+				return u;
+			}
+		}
+		return null;
+	}
+	
+	
+	public Ubicacion buscarUbicacion(String nombre) {
+		for(Ubicacion ubi :ubicaciones ) {
+			if(ubi.getNombre().equals(nombre)) {
+				return ubi;
+			}
+		}
+		return null;
+	}
+	
+	
+	public Producto buscarProducto(String codigo) {
+		for(Producto p : productos) {
+			if(p.getCodigo().equals(codigo)) {
+				return p;
+				}
+		}
+		return null;
+	}
+	
+	public DisciplinaIndividual buscarDisciplina(TipoDisciplina tipo) {
+		for (DisciplinaIndividual dI : disciplinas) {
+			if (dI.getTipo() == tipo) {
+				return dI;
+			}
+		}
+		return null;
+	}
+	
+	
+	
+	public Usuario autenticar(String login, String password) {
+		Usuario u = buscarUsuario(login);
+		if (u == null || !u.verificarPassword(password)) {
+			throw new IllegalArgumentException("Usuario o contraseña incorrectos");
+		}
+		return u;
+	}
 	
 	
 	
