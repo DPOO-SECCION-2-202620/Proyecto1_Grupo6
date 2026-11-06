@@ -1,15 +1,20 @@
 package modelo;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import modelo.comun.Modalidad;
 import modelo.comun.TipoDisciplina;
 import modelo.individual.DisciplinaIndividual;
+import modelo.individual.Reserva;
 import modelo.tienda.ExistenciaArticulo;
 import modelo.tienda.Producto;
 import modelo.tienda.SugerenciaProducto;
 import modelo.tienda.Ubicacion;
 import modelo.torneos.Torneo;
+import modelo.usuarios.Socio;
 import modelo.usuarios.Usuario;
 
 public class Club {
@@ -149,9 +154,20 @@ public class Club {
 		return u;
 	}
 	
-	
-	
-	
+	public Reserva reservar(Socio socio , TipoDisciplina tipo, String codigo, LocalDate fecha , LocalTime horaInicio , int duracionMinutos, int cantidadJugadores,Modalidad modalidad) {
+		
+		DisciplinaIndividual disciplina = buscarDisciplina(tipo);
+		
+		if(disciplina == null) {
+			throw new IllegalArgumentException("La disciplina no existe");
+		}
+		
+		Reserva reserva =  new Reserva(socio, disciplina, codigo, fecha, horaInicio, duracionMinutos, cantidadJugadores, modalidad);
+		
+		disciplina.registrarReserva(reserva);
+		
+		return reserva ;
+	}
 	
 }
 
