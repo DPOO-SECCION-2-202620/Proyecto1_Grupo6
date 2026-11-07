@@ -168,6 +168,21 @@ public class Club {
 		
 		return reserva ;
 	}
+	public void trasladarProducto(String idOrigen, String idDestino, String codigoProducto, int cantidad) {
+	    // 1. Buscar la ubicación origen y destino usando tu lista 'ubicaciones'
+	    // 2. Buscar la 'ExistenciaArticulo' en la ubicación de origen
+	    // 3. Validar CA-2: Si no existe la existencia en origen, lanza IllegalArgumentException
+	    // 4. Buscar si ya hay una 'ExistenciaArticulo' en destino para ese producto
+	    // 5. Validar CA-3: Si ya existe en destino, lanza IllegalArgumentException
+	    // 6. Restar la cantidad a la existencia de origen
+	    // 7. Crear una nueva 'ExistenciaArticulo' para el destino y agregarla a tu lista
+	}
+
+
+	public Integer consultarStock(String string, String string2) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }
 
