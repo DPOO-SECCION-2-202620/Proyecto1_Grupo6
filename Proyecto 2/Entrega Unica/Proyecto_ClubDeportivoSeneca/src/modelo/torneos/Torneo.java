@@ -44,4 +44,7 @@ public class Torneo {
             cuposEstandarDisponibles--;
         }
     }
+    public Modalidad getModalidad() { 
+        return modalidad; 
+    }
 }
