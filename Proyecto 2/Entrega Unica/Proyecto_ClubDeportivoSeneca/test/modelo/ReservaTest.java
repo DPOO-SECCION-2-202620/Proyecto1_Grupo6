@@ -51,7 +51,7 @@ class ReservaTest {
 	
 	
 
-	@Test
+	@Test 
 	void reservaCuandoHayCupos() {
 		Reserva r = club.reservar(juana,TipoDisciplina.TENIS, "T1",fecha,hora,60,2,Modalidad.SENCILLOS);
 		

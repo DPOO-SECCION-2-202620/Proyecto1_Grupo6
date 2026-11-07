@@ -170,7 +170,10 @@ public class Club {
 	}
 	public void trasladarProducto(String idOrigen, String idDestino, String codigoProducto, int cantidad) {
 	    // 1. Buscar la ubicación origen y destino usando tu lista 'ubicaciones'
+		Ubicacion Origin1= buscarUbicacion(idOrigen);
+		Ubicacion Dest1= buscarUbicacion(idDestino);
 	    // 2. Buscar la 'ExistenciaArticulo' en la ubicación de origen
+		
 	    // 3. Validar CA-2: Si no existe la existencia en origen, lanza IllegalArgumentException
 	    // 4. Buscar si ya hay una 'ExistenciaArticulo' en destino para ese producto
 	    // 5. Validar CA-3: Si ya existe en destino, lanza IllegalArgumentException

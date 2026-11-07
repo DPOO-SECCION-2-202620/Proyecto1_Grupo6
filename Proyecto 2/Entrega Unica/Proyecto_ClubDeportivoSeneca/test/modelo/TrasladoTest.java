@@ -28,7 +28,7 @@ class TrasladoTest {
         raqueta = new Producto("PRD-100", "Raqueta Wilson", 150000.0);
         
         tiendaOrigen.agregarProducto(raqueta, 10); 
-    }
+    } 
     @Test
     void testTrasladoExitoso() {
         // Ejecución: Trasladamos 5 unidades
