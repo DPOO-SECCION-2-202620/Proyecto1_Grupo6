@@ -1,10 +1,13 @@
 package modelo;
 import static org.junit.jupiter.api.Assertions.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import modelo.torneos.Torneo;
 import modelo.usuarios.Socio;
+import modelo.deportes.Equipo;
 
 class TorneoTest {
     private Club club;
@@ -48,5 +51,26 @@ class TorneoTest {
         assertThrows(IllegalArgumentException.class, () -> {
             club.inscribirTorneo("TRN-EQ", socioNoob);
         }, "Debe lanzar excepción porque el torneo es para equipos, no individual.");
+    }
+    @Test
+    void testInscripcionEquipoExitoso() {
+        Torneo torneoEquipos = new Torneo("TRN-EQ", "Torneo Cerros Equipos", Torneo.Tipo.COMPETITIVO, Torneo.Modalidad.EQUIPO, 10, 150000.0);
+        club.agregarTorneo(torneoEquipos);
+        
+        Equipo equipoPrueba = new Equipo("Los TigresFC", 10, null, "Activo", null, new ArrayList<>());
+        
+        club.inscribirEquipoEnTorneo("TRN-EQ", equipoPrueba);
+        
+        assertEquals(7, torneoEquipos.getCuposEstandarDisponibles());
+        assertEquals(2, torneoEquipos.getCuposPreferencialesDisponibles());
+    }
+
+    @Test
+    void testFallaEquipoEnTorneoIndividual() {
+    	Equipo equipoPrueba = new Equipo("Los LeonesFC", 10, null, "Activo", null, new ArrayList<>());
+        
+        assertThrows(IllegalArgumentException.class, () -> {
+            club.inscribirEquipoEnTorneo("TRN-01", equipoPrueba);
+        });
     }
 }

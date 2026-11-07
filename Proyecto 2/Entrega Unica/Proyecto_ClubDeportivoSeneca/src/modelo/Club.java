@@ -17,7 +17,7 @@ import modelo.tienda.Ubicacion;
 import modelo.torneos.Torneo;
 import modelo.usuarios.Socio;
 import modelo.usuarios.Usuario;
-
+import modelo.deportes.Equipo;
 public class Club {
 
 	private List<Usuario> usuarios;
@@ -244,5 +244,27 @@ public class Club {
 		}
 		torneo.consumirCupo(esPreferencial);
 	}
-	
+	public void inscribirEquipoEnTorneo(String idTorneo, Equipo equipo) {
+		Torneo torneo = buscarTorneo(idTorneo);
+		if (torneo == null) {
+			throw new IllegalArgumentException("El torneo no existe.");
+		}
+		
+		if (torneo.getModalidad() == Torneo.Modalidad.INDIVIDUAL) {
+			throw new IllegalArgumentException("No se puede inscribir un equipo en un torneo INDIVIDUAL.");
+		}
+
+		boolean esPreferencial = false;
+
+		if (esPreferencial) {
+			if (torneo.getCuposPreferencialesDisponibles() <= 0) {
+				throw new IllegalStateException("No hay cupos preferenciales disponibles.");
+			}
+		} else {
+			if (torneo.getCuposEstandarDisponibles() <= 0) {
+				throw new IllegalStateException("No hay cupos estándar disponibles.");
+			}
+		}
+		torneo.consumirCupo(esPreferencial);
+	}
 }
