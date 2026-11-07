@@ -15,6 +15,7 @@ import modelo.tienda.Producto;
 import modelo.tienda.SugerenciaProducto;
 import modelo.tienda.Ubicacion;
 import modelo.torneos.Torneo;
+import modelo.usuarios.Empleado;
 import modelo.usuarios.Socio;
 import modelo.usuarios.Usuario;
 import modelo.deportes.Equipo;
@@ -266,5 +267,48 @@ public class Club {
 			}
 		}
 		torneo.consumirCupo(esPreferencial);
+		
 	}
+	
+	public void aprobarSugerencia(SugerenciaProducto sugerencia){
+		
+		if(sugerencia.isEsSnack() && !sugerencia.tieneAlergenosDeclarados()) {
+			throw new IllegalStateException("No se puede aprobar un snack sin alergenos declarado");
+			}
+		sugerencia.aprobar();
+		
+		Producto p = sugerencia.crearProducto();
+		agregarProducto(p);
+	
+	}
+	
+	public void rechazarSugerencia(SugerenciaProducto sugerencia) {
+		sugerencia.rechazar();
+	}
+	
+	public List<SugerenciaProducto> sugerenciasDe(Empleado empleado){
+		List<SugerenciaProducto> resultado = new ArrayList<>();
+		for(SugerenciaProducto s : sugerencias) {
+			if(s.getEmpleado()==empleado) {
+				resultado.add(s);
+			}
+		}
+		
+		return resultado;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

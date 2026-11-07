@@ -59,4 +59,21 @@ class ReservaTest {
 		assertTrue(tenis.getReservas().contains(r));
 	}
 
+	
+	@Test
+	void rechazarCuandoNoHayCupo() {
+		club.reservar(juana,TipoDisciplina.TENIS, "T1",fecha,hora,60,2,Modalidad.SENCILLOS);
+		club.reservar(juana,TipoDisciplina.TENIS, "T2",fecha,hora,60,2,Modalidad.SENCILLOS);
+		
+		assertThrows(IllegalStateException.class, () -> club.reservar(juana, TipoDisciplina.TENIS, "T3", fecha, hora, 60, 2, Modalidad.SENCILLOS));
+		
+	}
+	
+	
+	@Test
+	void rechazarPadelConDosJugadores() {
+		
+		assertThrows(IllegalArgumentException.class, () -> club.reservar(juana, TipoDisciplina.PADEL, "P1", fecha, hora, 60, 2, Modalidad.SENCILLOS));
+		
+	}
 }
