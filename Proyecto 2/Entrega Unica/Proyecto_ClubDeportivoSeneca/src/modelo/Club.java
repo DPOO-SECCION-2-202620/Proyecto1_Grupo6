@@ -9,6 +9,7 @@ import modelo.comun.Modalidad;
 import modelo.comun.TipoDisciplina;
 import modelo.individual.DisciplinaIndividual;
 import modelo.individual.Reserva;
+import modelo.tienda.ArticuloTienda;
 import modelo.tienda.ExistenciaArticulo;
 import modelo.tienda.Producto;
 import modelo.tienda.SugerenciaProducto;
@@ -104,6 +105,10 @@ public class Club {
 	public List<Torneo> getTorneos() {
 		return new ArrayList<>(torneos);
 	}
+
+	public void setExistencias(List<ExistenciaArticulo> existencias) {
+		this.existencias = existencias;
+	}
 	
 	
 	public Usuario buscarUsuario(String login) {
@@ -168,27 +173,45 @@ public class Club {
 		
 		return reserva ;
 	}
-	public void trasladarProducto(String idOrigen, String idDestino, String codigoProducto, int cantidad) {
-	    // 1. Buscar la ubicación origen y destino usando tu lista 'ubicaciones'
-		Ubicacion Origin1= buscarUbicacion(idOrigen);
-		Ubicacion Dest1= buscarUbicacion(idDestino);
-	    // 2. Buscar la 'ExistenciaArticulo' en la ubicación de origen
-		
-	    // 3. Validar CA-2: Si no existe la existencia en origen, lanza IllegalArgumentException
-	    // 4. Buscar si ya hay una 'ExistenciaArticulo' en destino para ese producto
-	    // 5. Validar CA-3: Si ya existe en destino, lanza IllegalArgumentException
-	    // 6. Restar la cantidad a la existencia de origen
-	    // 7. Crear una nueva 'ExistenciaArticulo' para el destino y agregarla a tu lista
-	}
-
-
-	public Integer consultarStock(String string, String string2) {
-		// TODO Auto-generated method stub
+	public ExistenciaArticulo buscarExistencia(String nombreUbicacion, String codigoProducto) {
+		for (ExistenciaArticulo ex : existencias) {
+			if (ex.getUbicacion().getNombre().equals(nombreUbicacion) && 
+				ex.getArticulo().getCodigo().equals(codigoProducto)) {
+				return ex;
+			}
+		}
 		return null;
 	}
-	
+
+	public int consultarStock(String nombreUbicacion, String codigoProducto) {
+		ExistenciaArticulo ex = buscarExistencia(nombreUbicacion, codigoProducto);
+		return ex != null ? ex.getCantidad() : 0;
+	}
+
+	public void trasladarProducto(String origenId, String destinoId, String codigoProducto, int cantidad) {
+		Ubicacion origen = buscarUbicacion(origenId);
+		Ubicacion destino = buscarUbicacion(destinoId);
+
+		if (origen == null || destino == null) {
+			throw new IllegalArgumentException("Una de las ubicaciones no existe.");
+		}
+
+		ExistenciaArticulo exOrigen = buscarExistencia(origenId, codigoProducto);
+
+		if (exOrigen == null || !exOrigen.hayDisponibles(cantidad)) {
+			throw new IllegalArgumentException("El producto no existe en la sede origen o no hay stock suficiente.");
+		}
+
+		ExistenciaArticulo exDestino = buscarExistencia(destinoId, codigoProducto);
+
+		if (exDestino != null) {
+			throw new IllegalArgumentException("El producto ya está en el catálogo de la sede destino. Traslado denegado.");
+		}
+
+		exOrigen.retirarUnidades(cantidad);
+
+		Producto prod = buscarProducto(codigoProducto);
+		ExistenciaArticulo nuevaEx = new ExistenciaArticulo((ArticuloTienda) prod, destino, cantidad);
+		agregarExistenciaArticulo(nuevaEx);
+	}
 }
-
-
-
-
