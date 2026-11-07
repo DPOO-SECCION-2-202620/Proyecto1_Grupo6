@@ -41,4 +41,12 @@ class TorneoTest {
         assertEquals(8, torneo.getCuposEstandarDisponibles(), "El cupo estándar debió quedar intacto en 8");
         assertEquals(1, torneo.getCuposPreferencialesDisponibles(), "El cupo preferencial debió bajar de 2 a 1");
     }
+    @Test
+    void testFallaInscripcionModalidadIncorrecta() {
+        Torneo torneoEquipos = new Torneo("TRN-EQ", "Torneo de Equipos", Torneo.Tipo.COMPETITIVO, Torneo.Modalidad.EQUIPO, 10, 50000.0);
+        club.agregarTorneo(torneoEquipos);
+        assertThrows(IllegalArgumentException.class, () -> {
+            club.inscribirTorneo("TRN-EQ", socioNoob);
+        }, "Debe lanzar excepción porque el torneo es para equipos, no individual.");
+    }
 }
