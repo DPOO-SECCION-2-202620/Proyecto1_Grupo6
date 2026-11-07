@@ -8,11 +8,12 @@ public class Socio extends Usuario{
 
 	private Instalacion instalacionActual;
 	private boolean tieneBebidaCaliente;
+	private int puntos;
 	public Socio(String login, String password, String nombre, LocalDate fechaNacimiento) {
 		super(login, password, nombre, fechaNacimiento);
 		this.instalacionActual = null;
 		this.tieneBebidaCaliente = false;
-	
+		this.puntos= 0 ;
 	}
 	public Instalacion getInstalacionActual() {
 		return instalacionActual;
@@ -45,6 +46,12 @@ public class Socio extends Usuario{
 
 	public void terminarBebidaCaliente() {
 	    tieneBebidaCaliente = false;
+	}
+	public int getPuntos() {
+		return puntos;
+	}
+	public void setPuntos(int puntos) {
+		this.puntos = puntos;
 	}
 	
 	
