@@ -214,4 +214,32 @@ public class Club {
 		ExistenciaArticulo nuevaEx = new ExistenciaArticulo((ArticuloTienda) prod, destino, cantidad);
 		agregarExistenciaArticulo(nuevaEx);
 	}
+	public Torneo buscarTorneo(String idTorneo) {
+		for (Torneo t : torneos) {
+			if (t.getIdTorneo().equals(idTorneo)) {
+				return t;
+			}
+		}
+		return null;
+	}
+	public void inscribirTorneo(String idTorneo ,Socio socio ){
+		Torneo torneo = buscarTorneo(idTorneo);
+		if(torneo == null){
+			throw new IllegalArgumentException("torneo no existe");
+		}
+		boolean esPreferencial= socio.getPuntos() >= 100;
+		
+	 
+		if (esPreferencial) {
+			if (torneo.getCuposPreferencialesDisponibles() <= 0) {
+				throw new IllegalStateException("No hay cupos preferenciales disponibles.");
+			}
+		} else {
+			if (torneo.getCuposEstandarDisponibles() <= 0) {
+				throw new IllegalStateException("No hay cupos estándar disponibles.");
+			}
+		}
+		torneo.consumirCupo(esPreferencial);
+	}
+	
 }
