@@ -227,6 +227,9 @@ public class Club {
 		if(torneo == null){
 			throw new IllegalArgumentException("torneo no existe");
 		}
+		if (torneo.getModalidad() != Torneo.Modalidad.INDIVIDUAL) {
+			throw new IllegalArgumentException("No se puede inscribir a un socio individual en un torneo de modalidad " + torneo.getModalidad());
+		}
 		boolean esPreferencial= socio.getPuntos() >= 100;
 		
 	 
