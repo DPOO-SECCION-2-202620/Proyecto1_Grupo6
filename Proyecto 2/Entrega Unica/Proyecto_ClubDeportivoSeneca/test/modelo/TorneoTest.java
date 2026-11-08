@@ -21,9 +21,9 @@ class TorneoTest {
         torneo = new Torneo("TRN-01", "Torneo Cerros", Torneo.Tipo.COMPETITIVO, Torneo.Modalidad.INDIVIDUAL, 10, 50000.0);
         club.agregarTorneo(torneo);
         socioTryhard = new Socio("pro_login", "123", "Carlos", LocalDate.of(2000, 1, 1));
-        socioTryhard.setPuntos(150);
+        socioTryhard.sumarPuntos(150);
         socioNoob = new Socio("nov_login", "123", "Ana", LocalDate.of(2002, 5, 5));
-       socioNoob.setPuntos(10);
+        socioNoob.sumarPuntos(10);
         club.agregarUsuario(socioTryhard);
         club.agregarUsuario(socioNoob);
     }

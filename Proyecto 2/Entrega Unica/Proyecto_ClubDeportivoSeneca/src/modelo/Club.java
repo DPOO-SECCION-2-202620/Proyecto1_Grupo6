@@ -7,18 +7,24 @@ import java.util.List;
 
 import modelo.comun.Modalidad;
 import modelo.comun.TipoDisciplina;
+import modelo.deportes.Equipo;
 import modelo.individual.DisciplinaIndividual;
 import modelo.individual.Reserva;
+import modelo.tienda.ArticuloCafeteria;
 import modelo.tienda.ArticuloTienda;
+import modelo.tienda.DetalleVenta;
 import modelo.tienda.ExistenciaArticulo;
 import modelo.tienda.Producto;
 import modelo.tienda.SugerenciaProducto;
 import modelo.tienda.Ubicacion;
+import modelo.tienda.Venta;
+import modelo.tienda.VentaCafeteria;
+import modelo.tienda.VentaTienda;
+import modelo.torneos.BonoDeDescuento;
 import modelo.torneos.Torneo;
 import modelo.usuarios.Empleado;
 import modelo.usuarios.Socio;
 import modelo.usuarios.Usuario;
-import modelo.deportes.Equipo;
 public class Club {
 
 	private List<Usuario> usuarios;
@@ -299,6 +305,37 @@ public class Club {
 	
 	
 	
+	public Venta comprar(Socio socio, String codigoProducto,int cantidad, boolean usarBono) {
+		Producto producto = buscarProducto(codigoProducto);
+		if(producto == null) {
+			throw new IllegalArgumentException("El producto no existe");
+		}
+		if(cantidad<=0) {
+			throw new IllegalArgumentException("La cantidad debe ser mayor que 0");
+		}
+		Venta venta;
+		if(producto instanceof ArticuloCafeteria) {
+			venta = new VentaCafeteria(LocalDate.now(),socio);
+		}
+		else {
+			venta = new VentaTienda(LocalDate.now(),socio,null);
+		}
+		
+		venta.agregarDetalle(new DetalleVenta(producto,cantidad,producto.getPrecio()));
+		
+		if (usarBono) {
+		    BonoDeDescuento bono = socio.getBonoDeDescuento();
+
+		    if (bono == null) {
+		        throw new IllegalStateException("No tienes bonos disponibles");
+		    }
+
+		    venta.aplicarBono(bono);
+		}
+		
+		venta.registrarPuntosGanados();
+		return venta;
+	}
 	
 	
 	

@@ -1,8 +1,9 @@
 package modelo.tienda;
 
-import java.time.LocalDate;
-import java.util.List;
 
+import java.time.LocalDate;
+
+import modelo.torneos.BonoDeDescuento;
 import modelo.usuarios.Usuario;
 
 public class VentaTienda extends Venta{
@@ -51,22 +52,35 @@ public class VentaTienda extends Venta{
 	        if (codigoDescuento == null) {
 	            descuentoAplicado = 0;
 	            return;
+	            
 	        }
 	        if (descuentoPorPuntos > 0) {
 	            throw new IllegalStateException("El código de descuento no es acumulable con puntos");
 	        }
+	        if (descuentoPorBono > 0) {
+	            throw new IllegalStateException("El código de descuento no es acumulable con el bono");
+	        }
 	        descuentoAplicado = calcularSubtotal() * codigoDescuento.calcularPorcentaje(comprador);
 	    }
 
-	    @Override
+	 	@Override
 	    public MovimientoPuntos redimirPuntos(int puntos) {
 	        if (descuentoAplicado > 0) {
 	            throw new IllegalStateException("No se pueden redimir puntos si ya se aplicó un código de descuento");
 	        }
 	        return super.redimirPuntos(puntos);
 	    }
+
+
+		@Override
+		public void aplicarBono(BonoDeDescuento bono) {
+			if(descuentoAplicado>0) {
+				throw new IllegalStateException("El bono no es acumulable con el código de descuento");
+			}
+			super.aplicarBono(bono);
+		}
 	
-	
+	    
 	
 	
 	
