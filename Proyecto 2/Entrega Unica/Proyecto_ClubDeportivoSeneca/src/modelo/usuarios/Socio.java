@@ -57,7 +57,12 @@ public class Socio extends Usuario{
 		bonos.add(bono);
 	}
 	
-	public BonoDeDescuento getBonoDeDescuento() {
+    /** Necesario para guardar todos los bonos, incluidos los ya usados. */
+    public List<BonoDeDescuento> getBonos() {
+        return new ArrayList<>(bonos);
+    }
+
+    public BonoDeDescuento getBonoDeDescuento() {
 		for(BonoDeDescuento d : bonos) {
 			if(!d.isUsado()){
 				return d;

@@ -52,4 +52,23 @@ public class Empleado extends Usuario{
 	    return false;
 	}
 	
+    /** Verifica si un turno laboral se superpone al intervalo completo del torneo. */
+    public boolean estaDeTurnoDurante(java.time.LocalDate fecha,
+                                     LocalTime horaInicio,
+                                     LocalTime horaFin) {
+        if (fecha == null || horaInicio == null || horaFin == null ||
+                !horaInicio.isBefore(horaFin)) {
+            throw new IllegalArgumentException("Horario de torneo invalido");
+        }
+        DiaSemana dia = DiaSemana.values()[fecha.getDayOfWeek().getValue() - 1];
+        for (Turno turno : turnos) {
+            if (turno.getDia() == dia &&
+                    turno.getHoraInicio().isBefore(horaFin) &&
+                    horaInicio.isBefore(turno.getHoraFin())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

@@ -22,6 +22,7 @@ import modelo.tienda.VentaCafeteria;
 import modelo.tienda.VentaTienda;
 import modelo.torneos.BonoDeDescuento;
 import modelo.torneos.Torneo;
+import modelo.torneos.InscripcionTorneoEmpleado;
 import modelo.usuarios.Empleado;
 import modelo.usuarios.Socio;
 import modelo.usuarios.Usuario;
@@ -229,6 +230,18 @@ public class Club {
 		}
 		return null;
 	}
+    /** Inscripcion de empleados: gratuita y sin premio, solo fuera de turno. */
+    public InscripcionTorneoEmpleado inscribirEmpleadoEnTorneo(String idTorneo, Empleado empleado) {
+        if (empleado == null || buscarUsuario(empleado.getLogin()) != empleado) {
+            throw new IllegalArgumentException("El empleado debe estar registrado en el club");
+        }
+        Torneo torneo = buscarTorneo(idTorneo);
+        if (torneo == null) {
+            throw new IllegalArgumentException("El torneo no existe");
+        }
+        return torneo.inscribirEmpleado(empleado);
+    }
+
 	public void inscribirTorneo(String idTorneo ,Socio socio ){
 		Torneo torneo = buscarTorneo(idTorneo);
 		if(torneo == null){
@@ -237,7 +250,10 @@ public class Club {
 		if (torneo.getModalidad() != Torneo.Modalidad.INDIVIDUAL) {
 			throw new IllegalArgumentException("No se puede inscribir a un socio individual en un torneo de modalidad " + torneo.getModalidad());
 		}
-		boolean esPreferencial= socio.getPuntos() >= 100;
+        if (socio == null || buscarUsuario(socio.getLogin()) != socio) {
+            throw new IllegalArgumentException("El socio debe estar registrado en el club");
+        }
+        boolean esPreferencial= socio.getPuntos() >= 100;
 		
 	 
 		if (esPreferencial) {
@@ -249,9 +265,9 @@ public class Club {
 				throw new IllegalStateException("No hay cupos estándar disponibles.");
 			}
 		}
-		torneo.consumirCupo(esPreferencial);
-	}
-	public void inscribirEquipoEnTorneo(String idTorneo, Equipo equipo) {
+        torneo.inscribirSocio(socio, esPreferencial);
+    }
+    public void inscribirEquipoEnTorneo(String idTorneo, Equipo equipo) {
 		Torneo torneo = buscarTorneo(idTorneo);
 		if (torneo == null) {
 			throw new IllegalArgumentException("El torneo no existe.");

@@ -11,7 +11,10 @@ public abstract class Producto {
 		this.nombre = nombre;
 		this.precio = precio;
 	}
-	public double getPrecio() {
+	public String getNombre() {
+        return nombre;
+    }
+    public double getPrecio() {
 		return precio;
 	}
 	public void setPrecio(double precio) {
