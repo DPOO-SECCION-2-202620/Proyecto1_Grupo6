@@ -125,6 +125,11 @@ public class Torneo {
     
  
     public void retirarSocio(Socio socio, boolean esPreferencial) {
+         
+        if (estado != Estado.ABIERTAS) {
+            throw new IllegalStateException("No se puede retirar al socio porque el torneo ya no está en inscripciones.");
+        }
+        
         if (inscripcionesSocios.remove(socio)) {
             if (esPreferencial) {
                 cuposPreferencialesDisponibles++;

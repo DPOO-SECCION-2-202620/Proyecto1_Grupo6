@@ -352,51 +352,44 @@ public class Club {
 		venta.registrarPuntosGanados();
 		return venta;
 	}
-		public String finalizarTorneoYEntregarPremio(String idTorneo, String loginGanador) {
-			Torneo torneo = buscarTorneo(idTorneo);
-			if (torneo == null) {
-				throw new IllegalArgumentException("El torneo no existe.");
-			}
-			
-			Usuario usuario = buscarUsuario(loginGanador);
-			if (!(usuario instanceof Socio)) {
-				throw new IllegalArgumentException("El ganador debe ser un socio registrado.");
-			}
-			
-			Socio ganador = (Socio) usuario;
+	public String finalizarTorneoYEntregarPremio(String idTorneo, String loginGanador) {
+		Torneo torneo = buscarTorneo(idTorneo);
+		if (torneo == null) throw new IllegalArgumentException("El torneo no existe.");
+		
+		Usuario usuario = buscarUsuario(loginGanador);
+		if (!(usuario instanceof Socio)) throw new IllegalArgumentException("El ganador debe ser un socio registrado.");
+		
+		Socio ganador = (Socio) usuario;
 
+		if (torneo.getTipo() == Torneo.Tipo.RECREATIVO) {
+			
+			BonoDeDescuento bono = new BonoDeDescuento(0.20); 
+			
 			
 			torneo.finalizar(ganador);
-
+			ganador.recibirBono(bono);
 			
-			if (torneo.getTipo() == Torneo.Tipo.RECREATIVO) {
-				
-				BonoDeDescuento bono = new BonoDeDescuento(0); 
-				ganador.recibirBono(bono);
-				
-				return "Torneo Recreativo finalizado con éxito. Se ha entregado un bono de descuento al socio: " + ganador.getNombre();
-				
-			} else {
-				
-				
-				double pozoAcumulado = torneo.getRecaudoTotal();
-				
-				 ganador.agregarSaldo(pozoAcumulado);
-				
-				return "Torneo Competitivo finalizado. El ganador " + ganador.getNombre() + " se lleva el pozo total de $" + pozoAcumulado;
-			}
-		
+			return "Torneo Recreativo finalizado con éxito. Se ha entregado un bono de descuento al socio: " + ganador.getNombre();
+		} else {
+			double pozoAcumulado = torneo.getRecaudoTotal();
+			
+			torneo.finalizar(ganador);
+			ganador.agregarSaldo(pozoAcumulado);
+			
+			return "Torneo Competitivo finalizado. El ganador " + ganador.getNombre() + " se lleva el pozo total de $" + pozoAcumulado;
+		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+	public void retirarSocioDeTorneo(String idTorneo, String loginSocio) {
+		Torneo torneo = buscarTorneo(idTorneo);
+		if (torneo == null) throw new IllegalArgumentException("El torneo no existe.");
+		
+		Usuario usuario = buscarUsuario(loginSocio);
+		if (!(usuario instanceof Socio)) throw new IllegalArgumentException("El socio no existe en el sistema.");
+		
+		Socio socio = (Socio) usuario;
+		boolean esPreferencial = socio.getPuntos() >= 100;
+		
+		torneo.retirarSocio(socio, esPreferencial);
+	}
 }

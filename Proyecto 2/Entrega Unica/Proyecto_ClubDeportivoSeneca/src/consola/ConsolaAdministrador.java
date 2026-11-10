@@ -11,8 +11,8 @@ public class ConsolaAdministrador extends ConsolaBase {
     @Override protected void mostrarMenu(Usuario usuario) {
         int op;
         do {
-            System.out.println("\n=== MENU ADMINISTRADOR ===\n1. Listar torneos\n2. Crear torneo individual\n3. Iniciar torneo\n4. Finalizar torneo\n5. Ver sugerencias\n6. Aprobar sugerencia\n7. Rechazar sugerencia\n0. Guardar y salir");
-            op=leerEntero("Opcion",0,7);
+        	System.out.println("\n=== MENU ADMINISTRADOR ===\n1. Listar torneos\n2. Crear torneo individual\n3. Iniciar torneo\n4. Finalizar torneo\n5. Ver sugerencias\n6. Aprobar sugerencia\n7. Rechazar sugerencia\n8. Trasladar producto\n0. Guardar y salir");
+            op=leerEntero("Opcion",0,8);
             try {
                 switch(op) {
                     case 1 -> listarTorneos();
@@ -27,6 +27,7 @@ public class ConsolaAdministrador extends ConsolaBase {
                     case 5 -> listarSugerencias();
                     case 6 -> { club.aprobarSugerencia(buscarSugerencia()); System.out.println("Sugerencia aprobada."); }
                     case 7 -> { club.rechazarSugerencia(buscarSugerencia()); System.out.println("Sugerencia rechazada."); }
+                    case 8 -> ejecutarTraslado();
                 }
             } catch (IllegalArgumentException | IllegalStateException ex) { System.out.println("Operacion rechazada: " + ex.getMessage()); }
         } while(op!=0);
@@ -63,5 +64,14 @@ public class ConsolaAdministrador extends ConsolaBase {
         for(SugerenciaProducto s:club.getSugerencias())
             if(s.getCodigo().equals(codigo)) return s;
         throw new IllegalArgumentException("Sugerencia inexistente");
+    }
+    private void ejecutarTraslado() {
+        String origen = leerTexto("ID Sede Origen (ej. T-01)");
+        String destino = leerTexto("ID Sede Destino (ej. T-02)");
+        String codigo = leerTexto("Codigo del Producto");
+        int cantidad = leerEntero("Cantidad a trasladar", 1, 10000);
+        
+        club.trasladarProducto(origen, destino, codigo, cantidad);
+        System.out.println("Traslado exitoso. El inventario ha sido actualizado.");
     }
 }
