@@ -12,6 +12,7 @@ public class Torneo {
     public enum Tipo { RECREATIVO, COMPETITIVO }
     public enum Modalidad { INDIVIDUAL, DOBLES, EQUIPO }
     public enum Estado { ABIERTAS, EN_CURSO, FINALIZADO }
+    
     private String idTorneo;
     private String nombre;
     private Tipo tipo;
@@ -27,8 +28,11 @@ public class Torneo {
     private LocalDate fecha;
     private LocalTime horaInicio;
     private LocalTime horaFin;
+ 
     private final List<InscripcionTorneoEmpleado> inscripcionesEmpleados = new ArrayList<>();
     private final List<Socio> inscripcionesSocios = new ArrayList<>();
+   
+    private Socio ganador;
 
     public Torneo(String idTorneo, String nombre, Tipo tipo, Modalidad modalidad, int cupoMaximo, double tarifa) {
         this.idTorneo = idTorneo;
@@ -42,14 +46,15 @@ public class Torneo {
         
         this.estado = Estado.ABIERTAS;
         this.recaudoTotal = 0.0;
+        this.ganador = null;  
     }
 
- 
     public String getIdTorneo() { return idTorneo; }
     public int getCuposPreferencialesDisponibles() { return cuposPreferencialesDisponibles; }
     public int getCuposEstandarDisponibles() { return cuposEstandarDisponibles; }
+ 
+    public Socio getGanador() { return ganador; }
     
-  
     public void consumirCupo(boolean esPreferencial) {
         if (estado != Estado.ABIERTAS) {
             throw new IllegalStateException("El torneo no admite nuevas inscripciones");
@@ -67,7 +72,6 @@ public class Torneo {
         }
     }
 
-    /** Fecha e intervalo local del torneo; requeridos para validar turnos. */
     public void programar(LocalDate fecha, LocalTime inicio, LocalTime fin) {
         if (fecha == null || inicio == null || fin == null || !inicio.isBefore(fin)) {
             throw new IllegalArgumentException("Fecha u horario de torneo invalidos");
@@ -81,15 +85,10 @@ public class Torneo {
     }
 
     public InscripcionTorneoEmpleado inscribirEmpleado(Empleado empleado) {
-        if (empleado == null) {
-            throw new IllegalArgumentException("El empleado es obligatorio");
-        }
-        if (modalidad != Modalidad.INDIVIDUAL) {
-            throw new IllegalArgumentException("El empleado solo puede inscribirse a torneos individuales");
-        }
-        if (fecha == null || horaInicio == null || horaFin == null) {
-            throw new IllegalStateException("El torneo debe tener fecha y horario para inscribir empleados");
-        }
+        if (empleado == null) throw new IllegalArgumentException("El empleado es obligatorio");
+        if (modalidad != Modalidad.INDIVIDUAL) throw new IllegalArgumentException("El empleado solo puede inscribirse a torneos individuales");
+        if (fecha == null || horaInicio == null || horaFin == null) throw new IllegalStateException("El torneo debe tener fecha y horario para inscribir empleados");
+        
         for (InscripcionTorneoEmpleado inscripcion : inscripcionesEmpleados) {
             if (inscripcion.getEmpleado().getLogin().equals(empleado.getLogin())) {
                 throw new IllegalStateException("Empleado ya inscrito en este torneo");
@@ -98,30 +97,52 @@ public class Torneo {
         if (empleado.estaDeTurnoDurante(fecha, horaInicio, horaFin)) {
             throw new IllegalStateException("El torneo coincide con un turno de trabajo");
         }
+        
         consumirCupo(false);
         InscripcionTorneoEmpleado inscripcion = new InscripcionTorneoEmpleado(empleado, this);
         inscripcionesEmpleados.add(inscripcion);
         return inscripcion;
     }
 
-    /** Inscribe socios sin registrar dos veces a la misma persona. */
+     
     public void inscribirSocio(Socio socio, boolean preferencial) {
         if (socio == null) throw new IllegalArgumentException("El socio es obligatorio");
-        if (modalidad != Modalidad.INDIVIDUAL)
-            throw new IllegalArgumentException("Este torneo no admite socios individuales");
+        if (modalidad != Modalidad.INDIVIDUAL) throw new IllegalArgumentException("Este torneo no admite socios individuales");
+        
         for (Socio inscrito : inscripcionesSocios) {
             if (inscrito.getLogin().equals(socio.getLogin()))
                 throw new IllegalStateException("El socio ya esta inscrito en el torneo");
         }
+        
         consumirCupo(preferencial);
         inscripcionesSocios.add(socio);
+        
+      
+        if (this.tipo == Tipo.COMPETITIVO) {
+            this.recaudoTotal += this.tarifa;
+        }
+    }
+    
+ 
+    public void retirarSocio(Socio socio, boolean esPreferencial) {
+        if (inscripcionesSocios.remove(socio)) {
+            if (esPreferencial) {
+                cuposPreferencialesDisponibles++;
+            } else {
+                cuposEstandarDisponibles++;
+            }
+            if (this.tipo == Tipo.COMPETITIVO) {
+                this.recaudoTotal -= this.tarifa;
+            }
+        } else {
+            throw new IllegalArgumentException("El socio no estaba inscrito en el torneo.");
+        }
     }
 
     public List<Socio> getInscripcionesSocios() {
         return Collections.unmodifiableList(inscripcionesSocios);
     }
 
-    /** Solo persistencia: restaurar exactamente los contadores y estado guardados. */
     public void restaurarEstado(Estado estado, int preferenciales, int estandar, double recaudo) {
         if (estado == null || preferenciales < 0 || estandar < 0
                 || preferenciales + estandar > cupoMaximo
@@ -138,9 +159,24 @@ public class Torneo {
         estado = Estado.EN_CURSO;
     }
 
-    public void finalizar() {
+     
+    public void finalizar(Socio ganador) {
         if (estado != Estado.EN_CURSO) throw new IllegalStateException("El torneo no esta en curso");
-        estado = Estado.FINALIZADO;
+        
+        // Verificar que el ganador esté inscrito (siendo socio)
+        boolean inscrito = false;
+        for (Socio s : inscripcionesSocios) {
+            if (s.getLogin().equals(ganador.getLogin())) {
+                inscrito = true;
+                break;
+            }
+        }
+        if (!inscrito) {
+            throw new IllegalArgumentException("El ganador debe ser un socio inscrito en el torneo.");
+        }
+        
+        this.estado = Estado.FINALIZADO;
+        this.ganador = ganador;
     }
 
     public LocalDate getFecha() { return fecha; }

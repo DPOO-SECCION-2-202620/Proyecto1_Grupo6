@@ -230,7 +230,7 @@ public class Club {
 		}
 		return null;
 	}
-    /** Inscripcion de empleados: gratuita y sin premio, solo fuera de turno. */
+    
     public InscripcionTorneoEmpleado inscribirEmpleadoEnTorneo(String idTorneo, Empleado empleado) {
         if (empleado == null || buscarUsuario(empleado.getLogin()) != empleado) {
             throw new IllegalArgumentException("El empleado debe estar registrado en el club");
@@ -351,6 +351,41 @@ public class Club {
 		
 		venta.registrarPuntosGanados();
 		return venta;
+	}
+		public String finalizarTorneoYEntregarPremio(String idTorneo, String loginGanador) {
+			Torneo torneo = buscarTorneo(idTorneo);
+			if (torneo == null) {
+				throw new IllegalArgumentException("El torneo no existe.");
+			}
+			
+			Usuario usuario = buscarUsuario(loginGanador);
+			if (!(usuario instanceof Socio)) {
+				throw new IllegalArgumentException("El ganador debe ser un socio registrado.");
+			}
+			
+			Socio ganador = (Socio) usuario;
+
+			
+			torneo.finalizar(ganador);
+
+			
+			if (torneo.getTipo() == Torneo.Tipo.RECREATIVO) {
+				
+				BonoDeDescuento bono = new BonoDeDescuento(0); 
+				ganador.recibirBono(bono);
+				
+				return "Torneo Recreativo finalizado con éxito. Se ha entregado un bono de descuento al socio: " + ganador.getNombre();
+				
+			} else {
+				
+				
+				double pozoAcumulado = torneo.getRecaudoTotal();
+				
+				 ganador.agregarSaldo(pozoAcumulado);
+				
+				return "Torneo Competitivo finalizado. El ganador " + ganador.getNombre() + " se lleva el pozo total de $" + pozoAcumulado;
+			}
+		
 	}
 	
 	

@@ -13,12 +13,13 @@ public class Socio extends Usuario{
 	private boolean tieneBebidaCaliente;
 	
 	private List<BonoDeDescuento> bonos;
-	
+	private double saldo;
 	public Socio(String login, String password, String nombre, LocalDate fechaNacimiento) {
 		super(login, password, nombre, fechaNacimiento);
 		this.instalacionActual = null;
 		this.tieneBebidaCaliente = false;
 		this.bonos = new ArrayList<>();
+		this.saldo = 0.0;
 	}
 	public Instalacion getInstalacionActual() {
 		return instalacionActual;
@@ -69,6 +70,15 @@ public class Socio extends Usuario{
 			}
 		}
 		return null;
+	}
+    public double getSaldo() {
+		return saldo;
+	}
+
+	public void agregarSaldo(double monto) {
+		if (monto > 0) {
+			this.saldo += monto;
+		}
 	}
 	
 }

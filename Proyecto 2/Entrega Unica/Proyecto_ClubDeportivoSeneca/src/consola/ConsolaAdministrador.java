@@ -18,7 +18,12 @@ public class ConsolaAdministrador extends ConsolaBase {
                     case 1 -> listarTorneos();
                     case 2 -> crearTorneo();
                     case 3 -> { club.buscarTorneo(leerIdTorneo()).iniciar(); System.out.println("Torneo iniciado."); }
-                    case 4 -> { club.buscarTorneo(leerIdTorneo()).finalizar(); System.out.println("Torneo finalizado."); }
+                    case 4 -> { 
+                        String idTorneo = leerIdTorneo();
+                        String loginGanador = leerTexto("Login del socio ganador");
+                        String mensajePremio = club.finalizarTorneoYEntregarPremio(idTorneo, loginGanador);
+                        System.out.println(mensajePremio); 
+                    }
                     case 5 -> listarSugerencias();
                     case 6 -> { club.aprobarSugerencia(buscarSugerencia()); System.out.println("Sugerencia aprobada."); }
                     case 7 -> { club.rechazarSugerencia(buscarSugerencia()); System.out.println("Sugerencia rechazada."); }
