@@ -1,0 +1,3 @@
+SOCIO;socio1;1234;Socio de prueba;2004-02-15;120
+EMPLEADO;empleado1;1234;Empleado de prueba;1998-07-10;0
+ADMINISTRADOR;admin1;1234;Admin de prueba;1986-03-20;0
