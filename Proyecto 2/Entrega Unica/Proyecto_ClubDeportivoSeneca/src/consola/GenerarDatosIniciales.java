@@ -6,18 +6,20 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import modelo.Club;
 import modelo.comun.CategoriaArticulo;
+import modelo.comun.Nivel;
 import modelo.comun.TipoDisciplina;
 import modelo.individual.DisciplinaIndividual;
 import modelo.persistencia.PersistenciaClub;
 import modelo.tienda.ArticuloTienda;
 import modelo.tienda.ExistenciaArticulo;
+import modelo.tienda.Snack;
 import modelo.tienda.Ubicacion;
+import modelo.torneos.BonoDeDescuento;
 import modelo.torneos.Torneo;
 import modelo.usuarios.Administrador;
 import modelo.usuarios.Empleado;
 import modelo.usuarios.Socio;
 
-/** Ejecutar una sola vez para generar los trece archivos en data/. */
 public class GenerarDatosIniciales {
     public static void main(String[] args) throws Exception {
         Path carpeta=Path.of("data");
@@ -37,7 +39,12 @@ public class GenerarDatosIniciales {
         ArticuloTienda pelota=new ArticuloTienda("PELOTA-01","Pelota de tenis",30000,CategoriaArticulo.PELOTAS);
         club.agregarProducto(pelota);
         club.agregarExistenciaArticulo(new ExistenciaArticulo(pelota,almacen,10));
-        club.agregarDisciplinaIndividual(new DisciplinaIndividual(TipoDisciplina.TENIS,2));
+        DisciplinaIndividual tenis = new DisciplinaIndividual(TipoDisciplina.TENIS, 2);
+        club.agregarDisciplinaIndividual(tenis);
+        tenis.inscribirSocio(socio, Nivel.INTERMEDIO);       
+        club.agregarProducto(new Snack("SNACK-01", "Galletas Oreo", 3000));   
+        socio.recibirBono(new BonoDeDescuento(0.20));           
+        club.agregarUbicacion(new Ubicacion("TiendaNorte"));     
         club.agregarDisciplinaIndividual(new DisciplinaIndividual(TipoDisciplina.PADEL,1));
         Torneo torneo=new Torneo("TOR-01","Torneo recreativo de tenis",Torneo.Tipo.RECREATIVO,
                 Torneo.Modalidad.INDIVIDUAL,10,0);

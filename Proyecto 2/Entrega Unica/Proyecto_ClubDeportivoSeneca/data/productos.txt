@@ -1,1 +1,2 @@
 TIENDA;PELOTA-01;Pelota de tenis;30000.0;PELOTAS;
+SNACK;SNACK-01;Galletas Oreo;3000.0;;
